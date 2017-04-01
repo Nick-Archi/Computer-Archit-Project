@@ -29,7 +29,7 @@ module tbmatrix2x2Parallel();
 		rst <= 0;
 		a = 0;
 		b = 0;		
-		#100;
+		//#100;
 		
 		rst <= 1;
 		a = {8'd1,8'd2,8'd3,8'd4};

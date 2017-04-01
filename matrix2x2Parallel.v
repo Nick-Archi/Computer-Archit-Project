@@ -1,28 +1,43 @@
 // ECE 5367
 // Author: Nicholas Archibong
 /*
-	Description:
-	 Simulation of parallel computing example with 2x2 matrix
+	Description: Simulation of parallel computing example with 2x2 matrix
+	* The two matrices are split into two, and then sent to 2 different "tasks". 
+	* This code simulates the breaking up of the matrices and then two computations
+	* at the same time that are occurring with seperate rows of the 1st matrix. 
 	
 */
 
 module matrix2x2Parallel(a, b, clk, rst, res);
 	
+	/*
+	 * a & b, 32bit number that for every 8bit is a number for a total of 4 numbers 
+	 * clk, clock for computation time
+	 * rst, reset signal
+	*/
 	input[31:0] a, b;
 	input clk, rst;
 
+	// res, 32bit register that holds the computation of the 2x2 matrix multi
 	output reg[31:0] res;
 	
+	/*
+	 * state, moves through 4 states
+	 * flag, signals when the computation is done
+	 * a1, b1 & res1, essentially a 2x2 matrix where each element is 8bits
+	*/ 
 	reg[1:0] state;
 	reg flag;
 	reg[7:0] a1[0:1][0:1];
 	reg[7:0] b1[0:1][0:1];
 	reg[7:0] res1[0:1][0:1];
 		
+	// indicators for state position
 	parameter s0 = 0, s1 = 1, s2 = 2, s3 = 3;
 	
 	always@(posedge clk) begin
 	
+		// clear all the registers
 		if(rst == 0) begin
 			state <= 0;
 			flag <= 0;
@@ -56,10 +71,10 @@ module matrix2x2Parallel(a, b, clk, rst, res);
 			
 			s3: begin
 				flag <= 1;
-				res <= {res1[0][0], res1[0][1], res1[1][0], res1[1][1]};
+				res <= {res1[0][0], res1[0][1], res1[1][0], res1[1][1]}; // combining of results
 			end
 			
-						
+			// similar to the reset 				
 			default: begin
 			state <= 0;
 			flag <= 0;

@@ -2,7 +2,7 @@
 // Author: Nicholas Archibong
 /*
 	Description:
-	 
+	 Simulation of parallel computing example with 2x2 matrix
 	
 */
 
@@ -15,9 +15,9 @@ module matrix2x2Parallel(a, b, clk, rst, res);
 	
 	reg[1:0] state;
 	reg flag;
-	reg[7:0] a1[1:0][1:0];
-	reg[7:0] b1[1:0][1:0];
-	reg[7:0] res1[1:0][1:0];
+	reg[7:0] a1[0:1][0:1];
+	reg[7:0] b1[0:1][0:1];
+	reg[7:0] res1[0:1][0:1];
 		
 	parameter s0 = 0, s1 = 1, s2 = 2, s3 = 3;
 	

@@ -8,14 +8,14 @@
 
 `timescale 1ns/1ns
 
-module tbmatrix2x2Parallel();
+module tbmatrix2x2();
 
 	reg[31:0] a, b;
 	reg clk, rst;
 	
 	wire[31:0] res;
 	
-	matrix2x2Parallel uut(a, b, clk, rst, res);
+	matrix2x2 uut(a, b, clk, rst, res);
 	
 	always begin
 		clk <= 0;
@@ -40,3 +40,4 @@ module tbmatrix2x2Parallel();
 
 
 endmodule
+

@@ -13,7 +13,7 @@ module tbmatrix2x2Parallel();
 	reg[31:0] a, b;
 	reg clk, rst;
 	
-	wire[31:0] res;
+	wire[32:0] res;
 	
 	matrix2x2Parallel uut(a, b, clk, rst, res);
 	

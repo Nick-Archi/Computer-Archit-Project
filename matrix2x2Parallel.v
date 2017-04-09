@@ -30,7 +30,7 @@ module matrix2x2Parallel(a, b, clk, rst, res);
 	reg flag;
 	reg[7:0] a1[0:1][0:1];
 	reg[7:0] b1[0:1][0:1];
-	reg[7:0] res1[0:1][0:1];
+	reg[8:0] res1[0:1][0:1]; 
 		
 	// indicators for state position
 	parameter s0 = 0, s1 = 1, s2 = 2, s3 = 3;
@@ -52,7 +52,7 @@ module matrix2x2Parallel(a, b, clk, rst, res);
 			case(state)
 			
 			s0: begin
-				{a1[0][0], a1[0][1], a1[1][0], a1[1][1]} = a;
+				{a1[0][0], a1[0][1], a1[1][0], a1[1][1]} = a; // unpacking portion of a 32bit number -> 4 8bit numbers
 				{b1[0][0], b1[0][1], b1[1][0], b1[1][1]} = b;
 				state <= s1;
 			end

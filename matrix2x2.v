@@ -14,7 +14,7 @@ module matrix2x2(a, b, clk, rst, res);
 	 * a & b, 32bit number that for every 8bit is a number for a total of 4 numbers 
 	 * clk, clock for computation time
 	 * rst, reset signal
-	*/
+	`*/
 	input[31:0] a, b;
 	input clk, rst;
 	

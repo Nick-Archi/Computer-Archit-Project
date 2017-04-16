@@ -13,9 +13,9 @@ module tbmatrix2x2Parallel();
 	reg[31:0] a, b;
 	reg clk, rst;
 	
-	wire[32:0] res;
+	wire[31:0] res;
 	
-	matrix2x2Parallel uut(a, b, clk, rst, res);
+	matrixArbParallel uut(a, b, clk, rst, res);
 	
 	always begin
 		clk <= 0;
@@ -26,12 +26,12 @@ module tbmatrix2x2Parallel();
 	
 	initial begin
 	
-		rst <= 0;
-		a = 0;
-		b = 0;		
-		#100;
+		//rst <= 0;
+		//a = 0;
+		//b = 0;		
+		//#100;
 		
-		rst <= 1;
+		//rst <= 1;
 		a = {8'd1,8'd2,8'd3,8'd4};
 		b = {8'd5,8'd6,8'd7,8'd8};
 		

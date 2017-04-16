@@ -8,15 +8,20 @@
 
 `timescale 1ns/1ns
 
-module tbmatrix2x2();
 
-	reg[31:0] a, b;
+module tbForLoop();
+
 	reg clk, rst;
+	wire finish;
 	
-	wire[32:0] res;
+	defparam uut.c = 2; // how to change a parameter in the module
+
+	ForLoop uut(clk, rst, finish);
+	//ForLoop2 uut(clk, rst, finish);	
+	//ForLoop3 uut(clk, rst, finish);
 	
-	matrix2x2 uut(a, b, clk, rst, res);
 	
+
 	always begin
 		clk <= 0;
 		#10;
@@ -25,19 +30,12 @@ module tbmatrix2x2();
 	end
 	
 	initial begin
-	
 		rst <= 0;
-		a = 0;
-		b = 0;		
-		#100;
 		
+		#100
 		rst <= 1;
-		a = {8'd1,8'd2,8'd3,8'd4};
-		b = {8'd5,8'd6,8'd7,8'd8};
-		
-		
 	end
 
-
+	
+	
 endmodule
-

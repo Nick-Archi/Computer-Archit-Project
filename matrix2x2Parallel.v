@@ -14,7 +14,7 @@ module matrix2x2Parallel(a, b, clk, rst, res);
 	 * a & b, 32bit number that for every 8bit is a number for a total of 4 numbers 
 	 * clk, clock for computation time
 	 * rst, reset signal
-	*/
+	`*/
 	input[31:0] a, b;
 	input clk, rst;
 
@@ -30,7 +30,7 @@ module matrix2x2Parallel(a, b, clk, rst, res);
 	reg flag;
 	reg[7:0] a1[0:1][0:1];
 	reg[7:0] b1[0:1][0:1];
-	reg[8:0] res1[0:1][0:1]; 
+	reg[7:0] res1[0:1][0:1]; 
 		
 	// indicators for state position
 	parameter s0 = 0, s1 = 1, s2 = 2, s3 = 3;
@@ -48,6 +48,12 @@ module matrix2x2Parallel(a, b, clk, rst, res);
 			
 		end
 		
+
+		/*
+		* Each state does a two seperate computations within the same 
+		* clock pulse. Essentially, mimicking sending two independent
+		* over to two seperate tasks which are done at the same time. 
+		*/
 		else begin
 			case(state)
 			
@@ -69,6 +75,10 @@ module matrix2x2Parallel(a, b, clk, rst, res);
 				state <= s3;				
 			end
 			
+			/*
+			* End state. Sets flag to 1 to indicate that process has ended
+			* and repacks all of the computations into the result reggister. 
+			*/
 			s3: begin
 				flag <= 1;
 				res <= {res1[0][0], res1[0][1], res1[1][0], res1[1][1]}; // combining of results

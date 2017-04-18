@@ -8,14 +8,13 @@
 
 `timescale 1ns/1ns
 
-module tbTestArbParallel();
-	
+module tbTestArb();
+
 	reg[127:0] a;
 	reg[127:0] b;
 	reg clk, rst;
 	wire[64:0] res;
-	
-	
+
 	defparam uut.aRow = 3;	
 	defparam uut.aCol = 2;	
 	defparam uut.bRow = 2;	
@@ -23,18 +22,17 @@ module tbTestArbParallel();
 
 	defparam uut.matrixALen = 48;	
 	defparam uut.matrixBLen = 48;	
-	defparam uut.matrixRLen = 72;	
-	
-	
-	testArbParallel uut(a, b, clk, rst, res);
+	defparam uut.matrixRLen = 72;
 
+	testArb uut(a, b, clk, rst, res);
+	
 	always begin
 		clk <= 0;
 		#10;
 		clk <= 1;
 		#10;
 	end
-	
+
 	initial begin
 		rst <= 0;
 		
@@ -49,7 +47,6 @@ module tbTestArbParallel();
 		rst <= 1;
 		
 	end	
-
-
+	
 
 endmodule

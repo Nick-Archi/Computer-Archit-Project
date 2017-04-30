@@ -1,9 +1,9 @@
 // ECE 5367
-// Author: Nicholas Archibong
+// Author(s): Nicholas Archibong, Rakshak Talwar
 /*
 	Description: Testbench for the parallel arbitary sized matrices. 
 	Matrix size for the resultant and the multiplicant and multiplcand must be 
-	known beforehand. 
+	known beforehand.
 	 
 	
 */

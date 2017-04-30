@@ -1,5 +1,4 @@
-// ECE 5367
-// Author: Nicholas Archibong
+// ECE 5367Author(s): Nicholas Archibong, Rakshak TalwarAuthor: Nicholas Archibong
 /*
 	Description: Code that allows for the calculation of any size matrix
 		makes usage of sequential computing...
@@ -12,7 +11,7 @@
 module testArb(a, b, clk, rst, res);
 
 	/*
-	* ** Constraint! Calculations must be done beforehand	
+	* ** Constraint! Calculations must be done beforehand
 	* # of Rows and Cols for matrix a and b
 	* defualted to 2... user gets to change the selection
 	*/

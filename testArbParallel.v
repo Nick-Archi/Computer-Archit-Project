@@ -1,5 +1,5 @@
 // ECE 5367
-// Author: Nicholas Archibong
+// Author(s): Nicholas Archibong, Rakshak Talwar
 /*
 	Description: Code that allows for the calculation of any size matrix
 		makes usage of parallel computing...
@@ -13,7 +13,7 @@
 module testArbParallel(a, b, clk, rst, res);
 
 	/*
-	* ** Constraint! Calculations must be done beforehand	
+	* ** Constraint! Calculations must be done beforehand
 	* # of Rows and Cols for matrix a and b
 	* defualted to 2... user gets to change the selection
 	*/

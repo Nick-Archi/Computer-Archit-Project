@@ -27,7 +27,7 @@ module testArb(a, b, clk, rst, res);
 	*/
 	parameter matrixALen = 32;
 	parameter matrixBLen = 32;
-	parameter matrixRLen = 32;	
+	parameter matrixRLen = 32;
 	
 	input clk, rst;
 
@@ -43,16 +43,16 @@ module testArb(a, b, clk, rst, res);
 	/*
 	* finish(n) -> determine when (n)th/nd always@ finishes
 	*/
-	reg finish1;	
+	reg finish1;
 	
 	/*
-	* state(n) -> moves around the FSM 
+	* state(n) -> moves around the FSM
 	* a1, b1, res1, defined as matrices...by creating indices
 	*/
-	reg[1:0] state1, state2, state3;
+	reg[1:0] state1;
 	reg[7:0] a1[0:aRow-1][0:aCol-1];
 	reg[7:0] b1[0:bRow-1][0:bCol-1];
-	reg[7:0] res1[0:aRow-1][0:bCol-1];	
+	reg[7:0] res1[0:aRow-1][0:bCol-1];
 	
 	parameter s0 = 0, sDone = 1;
 
@@ -62,7 +62,7 @@ module testArb(a, b, clk, rst, res);
 	/*
 	* i, j, k move through the indices.
 	*/
-	integer i, j, k;	
+	integer i, j, k;
 
 	/*
 	* numElemA -> # of elements in matrix A
@@ -78,7 +78,7 @@ module testArb(a, b, clk, rst, res);
 
 	initial begin
 		i <= 0; j <= 0; k <= 0;
-		state1 <= 0; state2 <= 0; state3 <= 0;
+		state1 <= 0;
 		
 		numElemA <= matrixALen/8;
 		numElemB <= matrixBLen/8;
@@ -142,7 +142,6 @@ module testArb(a, b, clk, rst, res);
 							end // end for if(k1 < aCol)
 											
 							else begin
-								state2 <= s0;
 								j <= j + 1;
 								k <= 0;
 							end // end for else(k1 < aCol)

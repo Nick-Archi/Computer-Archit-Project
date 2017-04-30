@@ -53,7 +53,7 @@ module testArbParallel(a, b, clk, rst, res);
 	* state(n) -> moves around the (n)th/nd always@ 
 	* a1, b1, res1, defined as matrices...by creating indices
 	*/
-	reg[1:0] state1_1, state1_2, state1_3, state2_1, state2_2, state2_3;
+	reg[1:0] state1_1, state2_1;
 	reg[7:0] a1[0:aRow-1][0:aCol-1];
 	reg[7:0] b1[0:bRow-1][0:bCol-1];
 	reg[7:0] res1[0:aRow-1][0:bCol-1];
@@ -84,11 +84,11 @@ module testArbParallel(a, b, clk, rst, res);
 	
 	/*
 		initial block to initialize our matrix and control variables
-	*/	
+	*/
 	initial begin
 		i1 <= 0; j1 <= 0; k1 <= 0;
-		state1_1 <= 0; state1_2 <= 0; state1_3 <= 0;
-		state2_1 <= 0; state2_2 <= 0; state2_3 <= 0;
+		state1_1 <= 0;
+		state2_1 <= 0;
 		
 		numElemA <= matrixALen/8;
 		numElemB <= matrixBLen/8;
@@ -134,7 +134,7 @@ module testArbParallel(a, b, clk, rst, res);
 					b1[rSet][cSet] = b[8*chunkBCtr +: 8];
 					chunkBCtr = chunkBCtr - 1;
 					end
-			end			
+			end
 			
 		end
 	end
@@ -144,7 +144,7 @@ module testArbParallel(a, b, clk, rst, res);
 		
 		// warn the user if the matrices are incompatible for multiplication
 		if(aCol != bRow) begin
-			$display("Columns in A != Rows in B!");			
+			$display("Columns in A != Rows in B!");
 		end
 		
 		else begin
@@ -152,16 +152,13 @@ module testArbParallel(a, b, clk, rst, res);
 			case(state1_1)
 				s0: begin
 					if(i1 < firstBound) begin
-						state1_2 <= s0;					
 						if(j1 < bCol) begin
-							state1_3 <= s0;
 							if(k1 < aCol) begin 
 								res1[i1][j1] <= res1[i1][j1] + (a1[i1][k1] * b1[k1][j1]);
 								k1 <= k1 + 1;
 							end // end for if(k1 < aCol)
 											
 							else begin
-								state1_2 <= s0;
 								j1 <= j1 + 1;
 								k1 <= 0;
 							end // end for else(k1 < aCol)
@@ -204,23 +201,20 @@ module testArbParallel(a, b, clk, rst, res);
 			case(state2_1)
 				s0: begin
 					if(i2 < aRow) begin
-						state2_2 <= s0;
 						if(j2 < bCol) begin
-							state2_3 <= s0;
 							if(k2 < aCol) begin									
 								res1[i2][j2] <= res1[i2][j2] + (a1[i2][k2] * b1[k2][j2]);
 								k2 <= k2 + 1;
 							end // end for if(k2 < aCol)						
 							else begin
-								state2_2 <= s0;											
 								j2 <= j2 + 1;
 								k2 <= 0;
 							end // end for else(k2 < aCol)
-						end // end for if(j2 < bCol)						
+						end // end for if(j2 < bCol)
 						else begin
 							state2_1 <= s0;
-							i2 <= i2 + 1; 
-							j2 <= 0; 
+							i2 <= i2 + 1;
+							j2 <= 0;
 						end // end for else(j2 < bCol)
 					end // end for (i2 < aRow)
 					

@@ -1,4 +1,4 @@
-// ECE 5367Author(s): Nicholas Archibong, Rakshak TalwarAuthor: Nicholas Archibong
+// ECE 5367Author(s): Nicholas Archibong, Rakshak Talwar
 /*
 	Description: Code that allows for the calculation of any size matrix
 		makes usage of sequential computing...

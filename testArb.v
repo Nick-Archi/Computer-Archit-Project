@@ -66,23 +66,23 @@ module testArb(a, b, clk, rst, res);
 	integer i, j, k;	
 
 	/*
-	* aChunk -> # of elements in matrix A
-	* bChunk -> # of elements in matrix B
-	* chunkA -> used to decrement through elements in matrix A
-	* chunkB -> used to decrement through elements in matrix B
+	* numElemA -> # of elements in matrix A
+	* numElemB -> # of elements in matrix B
+	* chunkACtr -> used to decrement through elements in matrix A
+	* chunkBCtr -> used to decrement through elements in matrix B
 	*/
-	integer aChunk;
-	integer bChunk;
+	integer numElemA;
+	integer numElemB;
 	
-	integer chunkA;
-	integer chunkB;
+	integer chunkACtr;
+	integer chunkBCtr;
 
 	initial begin
 		i <= 0; j <= 0; k <= 0;
 		state1 <= 0; state2 <= 0; state3 <= 0;
 		
-		aChunk <= matrixALen/8;
-		bChunk <= matrixBLen/8;
+		numElemA <= matrixALen/8;
+		numElemB <= matrixBLen/8;
 			
 		// load values with 0s
         for(rSet=0; rSet < aRow; rSet=rSet+1)
@@ -104,26 +104,20 @@ module testArb(a, b, clk, rst, res);
 		if(!rst) begin
 			$display("Loading in data...\n");
 						
-			//aChunk = (matrixALen/8) - 1;
-			
+			//numElemA = (matrixALen/8) - 1;
+			chunkACtr = numElemA - 1; // updates the chunk with the previous values
 			// start loading of data...
 			for(rSet=0; rSet < aRow; rSet=rSet+1) begin
-				
-				chunkA = aChunk/(rSet + 1) - 1; // updates the chunk with the previous values
-				
 				for(cSet=0; cSet < aCol; cSet=cSet+1) begin
-					a1[rSet][cSet] = a[8*chunkA +: 8];
-					chunkA = chunkA - 1;
+					a1[rSet][cSet] = a[8*chunkACtr +: 8];
+					chunkACtr = chunkACtr - 1;
 					end
 			end
-			
+			chunkBCtr = numElemB - 1;
 			for(rSet=0; rSet < bRow; rSet=rSet+1) begin
-				
-				chunkB = bChunk/(rSet + 1) - 1;
-				
 				for(cSet=0; cSet < bCol; cSet=cSet+1) begin
-					b1[rSet][cSet] = b[8*chunkB +: 8];
-					chunkB = chunkB - 1;
+					b1[rSet][cSet] = b[8*chunkBCtr +: 8];
+					chunkBCtr = chunkBCtr - 1;
 					end
 			end			
 			
@@ -142,42 +136,25 @@ module testArb(a, b, clk, rst, res);
 			case(state1)
 				s0: begin
 					if(i < aRow) begin
-						state2 <= s0;
-						
-						case(state2)
-							s0: begin
-								if(j < bCol) begin
-									state3 <= s0;
-									
-									case(state3)
-										s0: begin
-											if(k < aCol) begin 
-												res1[i][j] <= res1[i][j] + (a1[i][k] * b1[k][j]);
-												k <= k + 1;
-											end // end for if(k1 < aCol)
+						if(j < bCol) begin
+							if(k < aCol) begin 
+								res1[i][j] <= res1[i][j] + (a1[i][k] * b1[k][j]);
+								k <= k + 1;
+							end // end for if(k1 < aCol)
 											
-											else begin
-												state2 <= s0;
-												j <= j + 1;
-												k <= 0;
-											end // end for else(k1 < aCol)
-											
-										end // end for s0 of state1_3
-										
-									endcase // endcase for state1_3
+							else begin
+								state2 <= s0;
+								j <= j + 1;
+								k <= 0;
+							end // end for else(k1 < aCol)
 									
-								end // end for if(j1 < bCol)
+						end // end for if(j1 < bCol)
 								
-								else begin
-									state1 <= s0;
-									i <= i + 1; 
-									j <= 0; 
-								end // end for else(j1 < bCol)
-								
-							end // end for s0 of state1_2
-							
-						endcase // endcase for state1_2
-						
+						else begin
+							state1 <= s0;
+							i <= i + 1; 
+							j <= 0; 
+						end // end for else(j1 < bCol)		
 					end // end for (i1 < firstBound)
 					
 					else begin
@@ -186,6 +163,10 @@ module testArb(a, b, clk, rst, res);
 					end // end for else (i1 < firstBound)
 					
 				end // end for s0 of state1_1
+				
+				sDone: begin
+					// done
+				end
 			
 			endcase // endcase for state1_1
 			

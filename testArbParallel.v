@@ -9,6 +9,7 @@
 	
 */
 
+
 module testArbParallel(a, b, clk, rst, res);
 
 	/*
@@ -70,25 +71,27 @@ module testArbParallel(a, b, clk, rst, res);
 	integer i2, j2, k2;
 	
 	/*
-	* aChunk -> # of elements in matrix A
-	* bChunk -> # of elements in matrix B
-	* chunkA -> used to decrement through elements in matrix A
-	* chunkB -> used to decrement through elements in matrix B
+	* numElemA -> # of elements in matrix A
+	* numElemB -> # of elements in matrix B
+	* chunkACtr -> used to decrement through elements in matrix A
+	* chunkBCtr -> used to decrement through elements in matrix B
 	*/
-	integer aChunk;
-	integer bChunk;
+	integer numElemA;
+	integer numElemB;
 	
-	integer chunkA;
-	integer chunkB;
+	integer chunkACtr;
+	integer chunkBCtr;
 	
-	
+	/*
+		initial block to initialize our matrix and control variables
+	*/	
 	initial begin
 		i1 <= 0; j1 <= 0; k1 <= 0;
 		state1_1 <= 0; state1_2 <= 0; state1_3 <= 0;
 		state2_1 <= 0; state2_2 <= 0; state2_3 <= 0;
 		
-		aChunk <= matrixALen/8;
-		bChunk <= matrixBLen/8;
+		numElemA <= matrixALen/8;
+		numElemB <= matrixBLen/8;
 	
 		firstBound = aRow / 2; // calculate where to split the matrix
 		
@@ -116,26 +119,20 @@ module testArbParallel(a, b, clk, rst, res);
 		if(!rst) begin
 			$display("Loading in data...\n");
 						
-			//aChunk = (matrixALen/8) - 1;
-			
+			chunkACtr = numElemA - 1; // updates the chunk with the previous values
 			// start loading of data...
 			for(rSet=0; rSet < aRow; rSet=rSet+1) begin
-				
-				chunkA = aChunk/(rSet + 1) - 1; // updates the chunk with the previous values
-				
 				for(cSet=0; cSet < aCol; cSet=cSet+1) begin
-					a1[rSet][cSet] = a[8*chunkA +: 8];
-					chunkA = chunkA - 1;
+					a1[rSet][cSet] = a[8*chunkACtr +: 8];
+					chunkACtr = chunkACtr - 1;
 					end
 			end
 			
+			chunkBCtr = numElemB - 1;
 			for(rSet=0; rSet < bRow; rSet=rSet+1) begin
-				
-				chunkB = bChunk/(rSet + 1) - 1;
-				
 				for(cSet=0; cSet < bCol; cSet=cSet+1) begin
-					b1[rSet][cSet] = b[8*chunkB +: 8];
-					chunkB = chunkB - 1;
+					b1[rSet][cSet] = b[8*chunkBCtr +: 8];
+					chunkBCtr = chunkBCtr - 1;
 					end
 			end			
 			
@@ -145,6 +142,7 @@ module testArbParallel(a, b, clk, rst, res);
 	// computation for one half of matrix A...
 	always@(posedge clk) begin
 		
+		// warn the user if the matrices are incompatible for multiplication
 		if(aCol != bRow) begin
 			$display("Columns in A != Rows in B!");			
 		end
@@ -154,41 +152,26 @@ module testArbParallel(a, b, clk, rst, res);
 			case(state1_1)
 				s0: begin
 					if(i1 < firstBound) begin
-						state1_2 <= s0;
-						
-						case(state1_2)
-							s0: begin
-								if(j1 < bCol) begin
-									state1_3 <= s0;
-									
-									case(state1_3)
-										s0: begin
-											if(k1 < aCol) begin
-												res1[i1][j1] <= res1[i1][j1] + (a1[i1][k1] * b1[k1][j1]);
-												k1 <= k1 + 1;
-											end // end for if(k1 < aCol)
+						state1_2 <= s0;					
+						if(j1 < bCol) begin
+							state1_3 <= s0;
+							if(k1 < aCol) begin 
+								res1[i1][j1] <= res1[i1][j1] + (a1[i1][k1] * b1[k1][j1]);
+								k1 <= k1 + 1;
+							end // end for if(k1 < aCol)
 											
-											else begin
-												state1_2 <= s0;
-												j1 <= j1 + 1;
-												k1 <= 0;
-											end // end for else(k1 < aCol)
-											
-										end // end for s0 of state1_3
-										
-									endcase // endcase for state1_3
-									
-								end // end for if(j1 < bCol)
+							else begin
+								state1_2 <= s0;
+								j1 <= j1 + 1;
+								k1 <= 0;
+							end // end for else(k1 < aCol)
+						end // end for if(j1 < bCol)
 								
-								else begin
-									state1_1 <= s0;
-									i1 <= i1 + 1; 
-									j1 <= 0; 
-								end // end for else(j1 < bCol)
-								
-							end // end for s0 of state1_2
-							
-						endcase // endcase for state1_2
+						else begin
+							state1_1 <= s0;
+							i1 <= i1 + 1; 
+							j1 <= 0; 
+						end // end for else(j1 < bCol)
 						
 					end // end for (i1 < firstBound)
 					
@@ -198,6 +181,10 @@ module testArbParallel(a, b, clk, rst, res);
 					end // end for else (i1 < firstBound)
 					
 				end // end for s0 of state1_1
+				
+				sDone: begin
+					// stay in this state...
+				end
 			
 			endcase // endcase for state1_1
 			
@@ -218,49 +205,35 @@ module testArbParallel(a, b, clk, rst, res);
 				s0: begin
 					if(i2 < aRow) begin
 						state2_2 <= s0;
-						
-						case(state2_2)
-							s0: begin
-								if(j2 < bCol) begin
-									state2_3 <= s0;
-									
-									case(state2_3)
-										s0: begin
-											if(k2 < aCol) begin
-												res1[i2][j2] <= res1[i2][j2] + (a1[i2][k2] * b1[k2][j2]);
-												k2 <= k2 + 1;
-											end // end for if(k2 < aCol)
-											
-											else begin
-												state2_2 <= s0;
-												j2 <= j2 + 1;
-												k2 <= 0;
-											end // end for else(k2 < aCol)
-											
-										end // end for s0 of state2_3
-										
-									endcase // endcase for state2_3
-									
-								end // end for if(j2 < bCol)
-								
-								else begin
-									state2_1 <= s0;
-									i2 <= i2 + 1; 
-									j2 <= 0; 
-								end // end for else(j2 < bCol)
-								
-							end // end for s0 of state2_2
-							
-						endcase // endcase for state2_2
-						
-					end // end for (i2 < firstBound)
+						if(j2 < bCol) begin
+							state2_3 <= s0;
+							if(k2 < aCol) begin									
+								res1[i2][j2] <= res1[i2][j2] + (a1[i2][k2] * b1[k2][j2]);
+								k2 <= k2 + 1;
+							end // end for if(k2 < aCol)						
+							else begin
+								state2_2 <= s0;											
+								j2 <= j2 + 1;
+								k2 <= 0;
+							end // end for else(k2 < aCol)
+						end // end for if(j2 < bCol)						
+						else begin
+							state2_1 <= s0;
+							i2 <= i2 + 1; 
+							j2 <= 0; 
+						end // end for else(j2 < bCol)
+					end // end for (i2 < aRow)
 					
 					else begin
 						state2_1 <= sDone;
 						finish2 <= 1;
-					end // end for else (i2 < firstBound)
+					end // end for else (i2 < aRow)
 					
 				end // end for s0 of state2_1
+				
+				sDone: begin
+					// do nothing...
+				end
 			
 			endcase // endcase for state2_1
 			

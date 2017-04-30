@@ -4,4 +4,4 @@ vsim.wlf
 *.qdb
 work/_lib1_15.qtl
 *.qtl
-work/_vmake
+work/*

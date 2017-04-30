@@ -1,7 +1,9 @@
 // ECE 5367
 // Author: Nicholas Archibong
 /*
-	Description:
+	Description: Testbench for the parallel arbitary sized matrices. 
+	Matrix size for the resultant and the multiplicant and multiplcand must be 
+	known beforehand. 
 	 
 	
 */
@@ -10,20 +12,25 @@
 
 module tbTestArbParallel();
 	
-	reg[127:0] a;
-	reg[127:0] b;
+	parameter aRow = 5;
+	parameter aCol = 5;
+	parameter bRow = 5;
+	parameter bCol = 5;
+	
+	reg[(aRow * aCol * 8) - 1:0] a;
+	reg[(bRow * bCol * 8) - 1:0] b;
 	reg clk, rst;
 	wire[64:0] res;
 	
 	
-	defparam uut.aRow = 3;	
-	defparam uut.aCol = 2;	
-	defparam uut.bRow = 2;	
-	defparam uut.bCol = 3;	
+	defparam uut.aRow = aRow;	
+	defparam uut.aCol = aCol;	
+	defparam uut.bRow = bRow;	
+	defparam uut.bCol = bCol;	
 
-	defparam uut.matrixALen = 48;	
-	defparam uut.matrixBLen = 48;	
-	defparam uut.matrixRLen = 72;	
+	defparam uut.matrixALen = aRow * aCol * 8;	
+	defparam uut.matrixBLen = bRow * bCol * 8;	
+	defparam uut.matrixRLen = aRow * bCol * 8;	
 	
 	
 	testArbParallel uut(a, b, clk, rst, res);
@@ -42,9 +49,36 @@ module tbTestArbParallel();
 		/*
 		* 
 		*/
-		a <= {8'd1,8'd2,8'd1,8'd2,8'd1,8'd2};
-		b <= {8'd1,8'd1,8'd1,8'd1,8'd1,8'd1};
 		
+		a <= {8'd1,8'd2,8'd3,8'd4,8'd5,8'd1,8'd2,8'd3,8'd4,8'd5,
+			  8'd1,8'd2,8'd3,8'd4,8'd5,8'd1,8'd2,8'd3,8'd4,8'd5,
+			  8'd1,8'd2,8'd3,8'd4,8'd5};
+		b <= {8'd1,8'd2,8'd3,8'd4,8'd5,8'd1,8'd2,8'd3,8'd4,8'd5,
+			  8'd1,8'd2,8'd3,8'd4,8'd5,8'd1,8'd2,8'd3,8'd4,8'd5,
+			  8'd1,8'd2,8'd3,8'd4,8'd5};
+		
+		/*
+		a <= {8'd5,8'd4,8'd3,8'd0,8'd5,8'd3,8'd5,8'd1,8'd1,8'd4,
+			8'd4,8'd3,8'd1,8'd3,8'd1,8'd1,8'd2,8'd2,8'd3,8'd5,
+			8'd4,8'd5,8'd2,8'd4,8'd4,8'd5,8'd0,8'd1,8'd0,8'd2,
+			8'd3,8'd0,8'd4,8'd1,8'd3,8'd5,8'd1,8'd2,8'd5,8'd1,
+			8'd1,8'd0,8'd5,8'd3,8'd4,8'd1,8'd5,8'd1,8'd1,8'd2,
+			8'd0,8'd0,8'd5,8'd5,8'd1,8'd4,8'd5,8'd0,8'd5,8'd0,
+			8'd1,8'd3,8'd3,8'd2,8'd1,8'd4,8'd3,8'd5,8'd0,8'd3,
+			8'd1,8'd3,8'd0,8'd0,8'd0,8'd5,8'd1,8'd4,8'd1,8'd1,
+			8'd3,8'd4,8'd5,8'd3,8'd0,8'd2,8'd4,8'd0,8'd4,8'd1,
+			8'd5,8'd1,8'd2,8'd1,8'd4,8'd3,8'd4,8'd1,8'd2,8'd5};
+		b <= {8'd4,8'd5,8'd2,8'd5,8'd4,8'd2,8'd2,8'd2,8'd5,8'd3,
+			8'd1,8'd4,8'd5,8'd5,8'd4,8'd5,8'd2,8'd0,8'd0,8'd4,
+			8'd2,8'd4,8'd4,8'd1,8'd1,8'd0,8'd5,8'd2,8'd4,8'd0,
+			8'd3,8'd4,8'd3,8'd0,8'd5,8'd0,8'd2,8'd5,8'd3,8'd3,
+			8'd0,8'd2,8'd0,8'd0,8'd5,8'd4,8'd0,8'd0,8'd1,8'd3,
+			8'd1,8'd4,8'd1,8'd0,8'd4,8'd5,8'd2,8'd4,8'd3,8'd3,
+			8'd4,8'd4,8'd3,8'd1,8'd4,8'd3,8'd2,8'd3,8'd4,8'd3,
+			8'd5,8'd0,8'd2,8'd2,8'd1,8'd3,8'd0,8'd1,8'd0,8'd2,
+			8'd0,8'd1,8'd0,8'd3,8'd3,8'd2,8'd2,8'd1,8'd5,8'd1,
+			8'd2,8'd3,8'd3,8'd5,8'd5,8'd3,8'd4,8'd1,8'd1,8'd0};
+		*/
 		#20
 		rst <= 1;
 		

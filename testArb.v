@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 // ECE 5367
 // Author(s): Nicholas Archibong, Rakshak Talwar
-=======
-// ECE 5367Author(s): Nicholas Archibong, Rakshak Talwar
->>>>>>> c311dbc93aadb41ab110192891ea64250e6bfeff
 /*
 	Description: Sequential computing code that allows for the calculation of any size matrix
 */

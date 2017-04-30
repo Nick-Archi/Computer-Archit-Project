@@ -1,11 +1,7 @@
-// ECE 5367Author(s): Nicholas Archibong, Rakshak TalwarAuthor: Nicholas Archibong
+// ECE 5367
+// Author(s): Nicholas Archibong, Rakshak Talwar
 /*
-	Description: Code that allows for the calculation of any size matrix
-		makes usage of sequential computing...
-	
-	Constrictions:
-	* User must do the calculation for the matrices before hand
-	
+	Description: Sequential computing code that allows for the calculation of any size matrix
 */
 
 module testArb(a, b, clk, rst, res);
@@ -96,7 +92,7 @@ module testArb(a, b, clk, rst, res);
             for(cSet=0; cSet < bCol; cSet=cSet+1)
 				res1[rSet][cSet] = 0;
 
-	end	
+	end
 	
 	// always block used to monitor the rst signal for loading...
 	always@(posedge clk) begin
@@ -118,16 +114,16 @@ module testArb(a, b, clk, rst, res);
 					b1[rSet][cSet] = b[8*chunkBCtr +: 8];
 					chunkBCtr = chunkBCtr - 1;
 					end
-			end			
+			end
 			
 		end
-	end	
+	end
 	
-	// computation 
+	// computation
 	always@(posedge clk) begin
 		
 		if(aCol != bRow) begin
-			$display("Columns in A != Rows in B!");			
+			$display("Columns in A != Rows in B!");
 		end
 		
 		else begin
@@ -136,7 +132,7 @@ module testArb(a, b, clk, rst, res);
 				s0: begin
 					if(i < aRow) begin
 						if(j < bCol) begin
-							if(k < aCol) begin 
+							if(k < aCol) begin
 								res1[i][j] <= res1[i][j] + (a1[i][k] * b1[k][j]);
 								k <= k + 1;
 							end // end for if(k1 < aCol)
@@ -150,9 +146,9 @@ module testArb(a, b, clk, rst, res);
 								
 						else begin
 							state1 <= s0;
-							i <= i + 1; 
-							j <= 0; 
-						end // end for else(j1 < bCol)		
+							i <= i + 1;
+							j <= 0;
+						end // end for else(j1 < bCol)
 					end // end for (i1 < firstBound)
 					
 					else begin
@@ -170,8 +166,8 @@ module testArb(a, b, clk, rst, res);
 			
 		end
 		
-	end	
+	end
 	
 	
 
-endmodule 
+endmodule

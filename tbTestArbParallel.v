@@ -1,11 +1,9 @@
 // ECE 5367
 // Author(s): Nicholas Archibong, Rakshak Talwar
 /*
-	Description: Testbench for the parallel arbitary sized matrices. 
-	Matrix size for the resultant and the multiplicant and multiplcand must be 
+	Description: Testbench for the parallel arbitary sized matrices.
+	Matrix size for the resultant and the multiplicant and multiplcand must be
 	known beforehand.
-	 
-	
 */
 
 `timescale 1ns/1ns
@@ -23,14 +21,14 @@ module tbTestArbParallel();
 	wire[64:0] res;
 	
 	
-	defparam uut.aRow = aRow;	
-	defparam uut.aCol = aCol;	
-	defparam uut.bRow = bRow;	
-	defparam uut.bCol = bCol;	
+	defparam uut.aRow = aRow;
+	defparam uut.aCol = aCol;
+	defparam uut.bRow = bRow;
+	defparam uut.bCol = bCol;
 
-	defparam uut.matrixALen = aRow * aCol * 8;	
-	defparam uut.matrixBLen = bRow * bCol * 8;	
-	defparam uut.matrixRLen = aRow * bCol * 8;	
+	defparam uut.matrixALen = aRow * aCol * 8;
+	defparam uut.matrixBLen = bRow * bCol * 8;
+	defparam uut.matrixRLen = aRow * bCol * 8;
 	
 	
 	testArbParallel uut(a, b, clk, rst, res);
@@ -47,7 +45,7 @@ module tbTestArbParallel();
 		
 		//#20
 		/*
-		* 
+		*
 		*/
 		
 		a <= {8'd1,8'd2,8'd3,8'd4,8'd5,8'd1,8'd2,8'd3,8'd4,8'd5,
@@ -82,7 +80,7 @@ module tbTestArbParallel();
 		#20
 		rst <= 1;
 		
-	end	
+	end
 
 
 

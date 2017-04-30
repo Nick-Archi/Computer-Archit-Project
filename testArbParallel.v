@@ -1,12 +1,7 @@
 // ECE 5367
 // Author(s): Nicholas Archibong, Rakshak Talwar
 /*
-	Description: Code that allows for the calculation of any size matrix
-		makes usage of parallel computing...
-	
-	Constrictions:
-	* User must do the calculation for the matrices before hand
-	
+	Description: Parallel computing code that allows for the calculation of arbitrarily sized matrix
 */
 
 
@@ -50,7 +45,7 @@ module testArbParallel(a, b, clk, rst, res);
 	reg finish1, finish2;
 	
 	/*
-	* state(n) -> moves around the (n)th/nd always@ 
+	* state(n) -> moves around the (n)th/nd always@
 	* a1, b1, res1, defined as matrices...by creating indices
 	*/
 	reg[1:0] state1_1, state2_1;
@@ -153,7 +148,7 @@ module testArbParallel(a, b, clk, rst, res);
 				s0: begin
 					if(i1 < firstBound) begin
 						if(j1 < bCol) begin
-							if(k1 < aCol) begin 
+							if(k1 < aCol) begin
 								res1[i1][j1] <= res1[i1][j1] + (a1[i1][k1] * b1[k1][j1]);
 								k1 <= k1 + 1;
 							end // end for if(k1 < aCol)
@@ -166,8 +161,8 @@ module testArbParallel(a, b, clk, rst, res);
 								
 						else begin
 							state1_1 <= s0;
-							i1 <= i1 + 1; 
-							j1 <= 0; 
+							i1 <= i1 + 1;
+							j1 <= 0;
 						end // end for else(j1 < bCol)
 						
 					end // end for (i1 < firstBound)
@@ -193,7 +188,7 @@ module testArbParallel(a, b, clk, rst, res);
 	always@(posedge clk) begin
 
 		if(aCol != bRow) begin
-			$display("Columns in A != Rows in B!");			
+			$display("Columns in A != Rows in B!");
 		end
 		
 		else begin
@@ -202,10 +197,10 @@ module testArbParallel(a, b, clk, rst, res);
 				s0: begin
 					if(i2 < aRow) begin
 						if(j2 < bCol) begin
-							if(k2 < aCol) begin									
+							if(k2 < aCol) begin
 								res1[i2][j2] <= res1[i2][j2] + (a1[i2][k2] * b1[k2][j2]);
 								k2 <= k2 + 1;
-							end // end for if(k2 < aCol)						
+							end // end for if(k2 < aCol)
 							else begin
 								j2 <= j2 + 1;
 								k2 <= 0;
@@ -231,7 +226,7 @@ module testArbParallel(a, b, clk, rst, res);
 			
 			endcase // endcase for state2_1
 			
-		end	
+		end
 	
 	end
 	
